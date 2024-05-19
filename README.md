@@ -28,7 +28,7 @@
    - Use a consistent URI pattern for item metadata (e.g., `base-uri/item-index.json`).
 8. **Run `./server`:**
    - Use a utility like [screen](https://www.gnu.org/software/screen/manual/screen.html) to keep it running.
-   - Ensure the server port is accessible publicly.
+   - Ensure the server port is publicly accessible.
 9. **Rediscover items:**
    - Navigate to `api-uri/admin/rediscover` using your `ADMIN_*` credentials.
    - Verify the appearance of `DATA_DIR/upd/1.json`.
@@ -39,7 +39,7 @@
 12. **Set the collection address:**
     - Navigate to `api-uri/admin/setaddr/collection-address`.
     - Use the address from step 10.
-13. **Wait for a `committed state` message in `server` logs.**
+13. **Wait for a `committed state` message in the `server` logs.**
 14. **Done.**
 
 ### Updating
@@ -55,10 +55,10 @@
 5. **Generate an update:**
    - Run `./ctl genupd path-to-update-file collection-address`.
 6. **Invoke the `ton://` deeplink that appears.**
-7. **Wait for a `committed state` message in `server` logs.**
+7. **Wait for a `committed state` message in the `server` logs.**
 8. **Done.**
 
-**Note:** Avoid updating during high traffic. Invalid proofs may occur during the brief period when the on-chain transaction is processed but not yet detected by the API. Update in large batches during low traffic times.
+**Note:** Avoid updating during high traffic periods to prevent invalid proofs. This may occur briefly when the on-chain transaction is processed but not yet detected by the API. Perform updates in large batches during low traffic times.
 
 # License
 
