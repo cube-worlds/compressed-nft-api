@@ -1,6 +1,6 @@
 CREATE TABLE items (
     id bigint NOT NULL PRIMARY KEY,
-    owner character(48) NOT NULL
+    owner character(48) NOT NULL UNIQUE
 );
 
 CREATE TABLE nodes (
