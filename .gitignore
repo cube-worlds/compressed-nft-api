@@ -1,0 +1,5 @@
+/.env
+/ctl
+/server
+/*.txt
+/apidata/upd/

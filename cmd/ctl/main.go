@@ -18,6 +18,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/pgx/v5"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/spf13/cobra"
 	"github.com/ton-community/compressed-nft-api/config"
 	"github.com/ton-community/compressed-nft-api/migrations"
@@ -255,37 +256,55 @@ func add(cmd *cobra.Command, args []string) error {
 
 	scanner := bufio.NewScanner(f)
 
-	err = pgx.BeginFunc(ctx, conn, func(tx pgx.Tx) error {
-		row := tx.QueryRow(ctx, "SELECT COUNT(*) FROM items")
-		var index uint64
-		err := row.Scan(&index)
-		if err != nil {
-			return err
+	var index uint64
+	row := conn.QueryRow(ctx, "SELECT COUNT(*) FROM items")
+	err = row.Scan(&index)
+	if err != nil {
+		return err
+	}
+
+	for scanner.Scan() {
+		txt := scanner.Text()
+		if len(txt) == 0 {
+			continue
 		}
 
-		for scanner.Scan() {
-			txt := scanner.Text()
-			if len(txt) == 0 {
-				continue
-			}
+		addr, err := address.ParseAddr(txt)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error while parsing address \"%v\": %v\n", txt, err)
+			continue
+		}
 
-			addr, err := address.ParseAddr(txt)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "error while parsing address \"%v\": %v", txt, err)
-				continue
-			}
-
-			_, err = tx.Exec(ctx, "INSERT INTO items (id, owner) VALUES ($1, $2)", index, addr.String())
+		// Retry logic for handling each item in a new transaction
+		for {
+			tx, err := conn.Begin(ctx)
 			if err != nil {
 				return err
 			}
 
-			index++
-		}
+			_, err = tx.Exec(ctx, "INSERT INTO items (id, owner) VALUES ($1, $2)", index, addr.String())
+			if err != nil {
+				pgErr, ok := err.(*pgconn.PgError)
+				if ok && pgErr.Code == "23505" {
+					fmt.Fprintf(os.Stderr, "Skipping duplicate item: %v\n", err)
+					tx.Rollback(ctx)
+					break // Break out of the retry loop for this item
+				}
+				tx.Rollback(ctx)
+				return err
+			}
 
-		return nil
-	})
-	if err != nil {
+			err = tx.Commit(ctx)
+			if err != nil {
+				return err
+			}
+			fmt.Fprintf(os.Stdout, "Successfully added address %s with index %d\n", addr.String(), index)
+			index++
+			break // Successfully committed, move to the next item
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
 		return err
 	}
 

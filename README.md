@@ -4,19 +4,22 @@
 
 ### Setup
 
-1. **Create a PostgreSQL database.**
-2. **Copy the following files to a directory:**
+1. **Install PostgreSQL and [Go](https://go.dev/doc/install).**
+2. **Build sources**
+   - `go mod download` to dowload dependencies
+   - `CGO_ENABLED=0 go build -o server cmd/server/main.go`
+   - `CGO_ENABLED=0 go build -o ctl cmd/ctl/main.go`
+3. **Copy the following files to a directory:**
    - `server` binary
    - `ctl` binary
-   - `.env.example`
-3. **Configure the `.env` file:**
+   - and copy environment file `cp .env.example .env`
+4. **Configure the `.env` file:**
    - Set `POSTGRES_URI` to your database URI.
    - Set `PORT` to the desired port.
    - Generate and set `ADMIN_*` credentials.
    - Set `DEPTH` as needed (maximum items = `2^DEPTH`, max `DEPTH` = 30).
    - Set `DATA_DIR` to the directory where small `.json` files will be stored.
    - Set `TONCENTER_URI`, removing `testnet.` for mainnet deployment.
-4. **Navigate to the directory containing `ctl` and `.env`.**
 5. **Prepare an `owners.txt` file:**
    - List item owner addresses, one per line.
    - The first address gets item index 0, and so on.
@@ -37,8 +40,8 @@
     - Replace placeholders with appropriate values.
 11. **Invoke the `ton://` deeplink that appears.**
 12. **Set the collection address:**
-    - Navigate to `api-uri/admin/setaddr/collection-address`.
-    - Use the address from step 10.
+    - Navigate to `api-uri/admin/setaddr/{collection-address}`.
+    - Use the `collection-address` from result of step 10.
 13. **Wait for a `committed state` message in the `server` logs.**
 14. **Done.**
 
