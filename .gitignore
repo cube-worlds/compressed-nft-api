@@ -2,4 +2,5 @@
 /ctl
 /server
 /*.txt
-/apidata/upd/
+/apidata/*
+.vscode

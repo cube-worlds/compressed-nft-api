@@ -87,12 +87,12 @@ func (h *Handler) getItems(c echo.Context) error {
 	ir := new(ItemsRequest)
 	if err := c.Bind(ir); err != nil {
 		log.Err(err).Msg("bad items request")
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.String(http.StatusBadRequest, "bad request, should pass `from` and `count` values")
 	}
 
 	if ir.Count == 0 {
 		log.Error().Msg("items request has count set to 0")
-		return c.String(http.StatusBadRequest, "bad request")
+		return c.String(http.StatusBadRequest, "bad request: count should be > 0")
 	}
 
 	if ir.Count > ITEMS_LIMIT {
