@@ -282,11 +282,12 @@ func add(cmd *cobra.Command, args []string) error {
 				return err
 			}
 
-			_, err = tx.Exec(ctx, "INSERT INTO items (id, owner) VALUES ($1, $2)", index, addr.String())
+			owner := addr.String()
+			_, err = tx.Exec(ctx, "INSERT INTO items (id, owner) VALUES ($1, $2)", index, owner)
 			if err != nil {
 				pgErr, ok := err.(*pgconn.PgError)
 				if ok && pgErr.Code == "23505" {
-					fmt.Fprintf(os.Stderr, "Skipping duplicate item: %v\n", err)
+					fmt.Fprintf(os.Stderr, "Skipping duplicate item: %v\n", owner)
 					tx.Rollback(ctx)
 					break // Break out of the retry loop for this item
 				}
@@ -298,7 +299,7 @@ func add(cmd *cobra.Command, args []string) error {
 			if err != nil {
 				return err
 			}
-			fmt.Fprintf(os.Stdout, "Successfully added address %s with index %d\n", addr.String(), index)
+			fmt.Fprintf(os.Stdout, "Successfully added address %s with index %d\n", owner, index)
 			index++
 			break // Successfully committed, move to the next item
 		}
