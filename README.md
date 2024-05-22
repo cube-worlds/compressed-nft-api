@@ -1,6 +1,6 @@
 # Compressed NFT Augmenting API
 
-This repositry contains implementation (cNFT TEP-? draft standart)[https://github.com/ton-blockchain/TEPs/blob/6fe57a10beb160140a2a98cf3bf0efb4e079b017/text/0000-compressed-nft-standard.md]
+This repositry contains implementation [cNFT TEP-? draft standart](https://github.com/ton-blockchain/TEPs/blob/6fe57a10beb160140a2a98cf3bf0efb4e079b017/text/0000-compressed-nft-standard.md)
 
 ## How to Use
 
@@ -58,7 +58,7 @@ This repositry contains implementation (cNFT TEP-? draft standart)[https://githu
 4. **Locate the new update file:**
    - Find it under `[DATA_DIR]/upd` (e.g., `2.json` if the last update was `1.json`).
 5. **Generate an update:**
-   - Run `./ctl genupd [path-to-update-file] [collection-address]`.
+   - Run `./ctl genupd [path-to-update-file] [collection-address]`, where collection-address is `EQAaSqEwAh00YOCc9ZwtqfNcXeehbl97yKQKCZPRGwCov51V` from creating steps.
 6. **Invoke the `ton://` deeplink that appears.**
 7. **Wait for a `committed state` message in the `server` logs.**
 8. **Done.**
