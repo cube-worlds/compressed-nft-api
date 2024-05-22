@@ -20,9 +20,6 @@ COPY --from=build-stage /server /server
 COPY .env .env
 
 ENV PORT 8080
-ENV DATA_DIR /apidata
-
-RUN mkdir -p ${DATA_DIR}
 
 # Install CA certificates
 RUN apt-get update && apt-get install -y ca-certificates
