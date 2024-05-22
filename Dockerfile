@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Build the application from source
-FROM golang:1.20 AS build-stage
+FROM golang:1.22 AS build-stage
 
 WORKDIR /app
 
@@ -17,6 +17,7 @@ FROM debian:12-slim AS build-release-stage
 WORKDIR /
 
 COPY --from=build-stage /server /server
+COPY .env .env
 
 ENV PORT 8080
 ENV DATA_DIR /apidata
