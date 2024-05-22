@@ -24,4 +24,7 @@ ENV DATA_DIR /apidata
 
 RUN mkdir -p ${DATA_DIR}
 
+# Install CA certificates
+RUN apt-get update && apt-get install -y ca-certificates
+
 ENTRYPOINT ["/server"]
