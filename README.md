@@ -1,6 +1,6 @@
 # Compressed NFT Augmenting API
 
-This repositry contains implementation (cNFT TEP-? (draft) standart)[https://github.com/ton-blockchain/TEPs/blob/6fe57a10beb160140a2a98cf3bf0efb4e079b017/text/0000-compressed-nft-standard.md]
+This repositry contains implementation (cNFT TEP-? draft standart)[https://github.com/ton-blockchain/TEPs/blob/6fe57a10beb160140a2a98cf3bf0efb4e079b017/text/0000-compressed-nft-standard.md]
 
 ## How to Use
 
@@ -40,7 +40,7 @@ This repositry contains implementation (cNFT TEP-? (draft) standart)[https://git
 10. **Generate an update:**
     - Run `./ctl genupd [path-to-update-file] [collection-owner] [collection-meta] [item-meta-prefix] [royalty-base] [royalty-factor] [royalty-recipient] [api-uri-including-v1]`.
     - Replace placeholders with appropriate values, for example:
-      `./ctl genupd `pwd`/apidata/upd/1.json 0QC4sEG_VQ4QawHnr77mqJhC98cpoyI-0gXuwR76Ff2kT4eI https://cubeworlds.club/api/nft/collection.json https://cubeworlds.club/api/nft/ 10 100 0QC4sEG_VQ4QawHnr77mqJhC98cpoyI-0gXuwR76Ff2kT4eI http://localhost:8081/v1`
+      `./ctl genupd `pwd`/apidata/upd/1.json UQDSqdhnwMllRlp0EqB4asBQiGhNWNa-9S4hPSVONLfr0WF3 https://cubeworlds.club/api/nft/collection.json https://cubeworlds.club/api/nft/ 10 100 UQDSqdhnwMllRlp0EqB4asBQiGhNWNa-9S4hPSVONLfr0WF3 https://cubeworlds.club/cnfts/v1`
 11. **Invoke the `ton://` deeplink that appears.**
 12. **Set the collection address:**
     - Navigate to `/admin/setaddr/[collection-address]`, using the `collection-address` from result of previous step.
@@ -58,7 +58,7 @@ This repositry contains implementation (cNFT TEP-? (draft) standart)[https://git
 4. **Locate the new update file:**
    - Find it under `[DATA_DIR]/upd` (e.g., `2.json` if the last update was `1.json`).
 5. **Generate an update:**
-   - Run `./ctl genupd path-to-update-file collection-address`.
+   - Run `./ctl genupd [path-to-update-file] [collection-address]`.
 6. **Invoke the `ton://` deeplink that appears.**
 7. **Wait for a `committed state` message in the `server` logs.**
 8. **Done.**
