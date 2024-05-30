@@ -57,6 +57,17 @@ func (ip *ItemProvider) GetItem(index uint64) (*data.ItemMetadata, error) {
 	return makeMetadata(index, addr), nil
 }
 
+func (ip *ItemProvider) GetIndex(owner string) (uint64, error) {
+	ctx := context.Background()
+	row := ip.pool.QueryRow(ctx, "SELECT id FROM items WHERE owner = $1", owner)
+	var id uint64
+	err := row.Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
 func (ip *ItemProvider) GetItems(from, count uint64) ([]*data.ItemMetadata, error) {
 	ctx := context.Background()
 	rows, err := ip.pool.Query(ctx, "SELECT id, owner FROM items WHERE id >= $1 AND id < $2 ORDER BY id ASC", from, from+count)

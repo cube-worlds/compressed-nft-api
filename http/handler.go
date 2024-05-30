@@ -185,6 +185,41 @@ func (h *Handler) getItem(c echo.Context) error {
 	return c.JSON(http.StatusOK, resp)
 }
 
+type AddressRequest struct {
+	Address string `param:"address"`
+}
+
+func (h *Handler) getAddress(c echo.Context) error {
+	ir := new(AddressRequest)
+	if err := c.Bind(ir); err != nil {
+		log.Err(err).Msg("bad address request")
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+
+	index, err := h.ItemProvider.GetIndex(ir.Address)
+	if err != nil {
+		log.Err(err).Msg("bad getIndex request")
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+
+	sh := h.StateHolder
+
+	state := sh.GetFullState()
+
+	if index > state.CurrentState.LastIndex {
+		log.Error().Msg("item index too large")
+		return c.String(http.StatusNotFound, "item index too large")
+	}
+
+	resp, err := h.getItemInternal(state, index)
+	if err != nil {
+		log.Err(err).Msg("could not get item")
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}
+
 type StateResponse struct {
 	Depth     int                `json:"depth"`
 	Capacity  string             `json:"capacity"`
